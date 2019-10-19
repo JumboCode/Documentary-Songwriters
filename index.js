@@ -1,23 +1,12 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const app = express()
-const db = require('./controllers/queries')
-const port = 3000
+import React from 'react';
+import ReactDOM from 'react-dom';
+//import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
 
-app.set('view engine', 'ejs')
-app.use(bodyParser.json())
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-)
+ReactDOM.render(<App />, document.getElementById('root'));
 
-app.get('/', function(req, res){
-  res.render('index');
-})
-
-app.get('/persons', db.getUsers)
-
-app.listen(port, () => {
-  console.log(`App running on port ${port}.`)
-})
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
