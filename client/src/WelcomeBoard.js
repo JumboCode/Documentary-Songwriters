@@ -2,7 +2,6 @@ import React from 'react';
 import './WelcomeBoard.css'
 import WelcomeCounter from "./WelcomeCounter";
 import Button from "./Button"
-
 class WelcomeBoard extends React.Component {
     render() {
         return (

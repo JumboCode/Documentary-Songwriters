@@ -2,48 +2,27 @@ import React from 'react';
 import './LoginForm.css'
 import Button from "../Button"
 import GoogleImg from "../assets/google_signin.png"
-// import InputField from "./InputField";
-import {
-    // BrowserRouter as Router,
-    // Switch,
-    // Route,  
-    // Link
-  } from "react-router-dom";
-
 
 class LoginForm extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            loginState: 0
-        }
-        this.authenticate = this.authenticate.bind(this)
-        this.renderForm = this.renderForm.bind(this)
-        this.simulateLogin = this.simulateLogin.bind(this)
+            login: 0
+        };
+        this.loginState = this.loginState.bind(this);
+        this.updateLoginState = this.updateLoginState.bind(this);
     }
 
-    // fake async function to authenticate
-    authenticate(username, password) {
-        // return({auth : true})
-        return new Promise(resolve => {
-            setTimeout(() => {
-                console.log("Authorizing user...")
-                resolve({auth: true});
-            }, 1000)
-        })
-        
-        
-    }
-    
-    renderForm() {
-        if (this.state.loginState === 0) {
-            return this.renderLogin()
+    loginState() {
+        if (this.state.login === 0) {
+            return this.renderLogin();
         } else {
-            return this.renderRegister()
+            return this.renderRegister();
         }
     }
 
     async simulateLogin() {
+        console.log("Calling simulate Login")
         var user = "";
         var pass = "";
         const loginAuth = await this.authenticate(user, pass)
@@ -55,15 +34,16 @@ class LoginForm extends React.Component {
     renderLogin() {
         return(
             <form className="auth-form">
-                <button className="google-button">
+                <button className="google-button" onClick={() => this.openGoogleLogin()}>
                     <img src={GoogleImg} alt="Google Login Button" />
                 </button>
                 <input className="login-input" type="text" placeholder="Username" name="Username"/>
                 <input className="login-input" type="password" placeholder="Password" name="Password"/>
-                <Button name="Login" onClick={this.simulateLogin}/>
+                <Button name="Login" url="/api/home"/>
                 <p>New user? 
                     <a href="#" onClick={() => {
-                        this.setState({loginState: 1})
+                        // console.log("clicked")
+                        this.setState({login: 1})
                     }}>
                          Sign up here.</a>
                 </p>
@@ -74,16 +54,16 @@ class LoginForm extends React.Component {
     renderRegister() {
         return(
             <form className="auth-form registration">
-                <button className="google-button">
+                <button className="google-button" onClick={() => this.openGoogleLogin()}>
                     <img src={GoogleImg} alt="Google Login Button" />
                 </button>
                 <input className="login-input" type="text" placeholder="Username" name="Email"/>
                 <input className="login-input" type="password" placeholder="Password" name="Password"/>
                 <input className="login-input" type="password" placeholder="Confirm Password" name="Confirm Password"/>
-                <Button name="Register" onClick={this.simulateLogin}/>
+                <Button name="Register" url="/api/home"/>
                 <p>Already have an account?  
                     <a href="#" onClick={() => {
-                        this.setState({loginState: 0})
+                        this.setState({login: 0})
                     }}>
                          Log in here.</a>
                 </p>
@@ -92,24 +72,36 @@ class LoginForm extends React.Component {
         )
     }
 
+    updateLoginState(num) {
+        this.setState({login: num});
+    }
+
     render() {
         return (
             <div className="LoginForm">
-                <h1 className="Title">Documentary Songwriters</h1>
-                <div className="login-area">
-                    <div>
-                        {this.renderForm()}
-                    </div>
-                    {/* TODO: Clean Up: */}
-                    <div className="user-prompt">
-                        
-                        {/* <h2>New User?</h2>
-                        <a href="#">Click here to register a new account.</a> */}
+                <h1 className={"Title"}>Documentary Songwriters</h1>
+                <div className="login_area flex_container">
+                    <div className={"user_login login_section"}>
+                        {this.loginState()}
                     </div>
                 </div>
 
             </div>
-        )
+        );
+    };
+
+    openGoogleLogin = () => {
+        window.open("http://localhost:5000/auth/google/", "Login",'height=800,width=500');
+    };
+
+    componentDidMount = () => {
+        window.addEventListener('message', (event) => {
+            console.log(event.data);
+            if (event.origin.startsWith("http://localhost:5000")) {
+                console.log("User " + event.data + " successfully logged in.");
+                window.location = "/api/home";
+            }
+        });
     }
 }
 

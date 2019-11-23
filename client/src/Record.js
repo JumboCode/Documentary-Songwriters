@@ -4,16 +4,12 @@ import Stopwatch from './Stopwatch'
 import './Record.css';
 
 
-// import PitchCounter  from '../../server/pitch-counter/pitch_counter'
-
-
 class Record extends React.Component {
     constructor() {
         super()
         this.state = {
             count: 0
         }
-        
         this.handleClick = this.handleClick.bind(this)
     }
 
